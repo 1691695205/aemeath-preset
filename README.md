@@ -145,15 +145,16 @@ dsh 0.2.0-rc.2（DSH Desktop 2.0.17）起，`$DSH_HOME/.agent-presets/<id>/` 发
 
 ## 相关项目
 
-爱弥斯主题全家桶：
+爱弥斯主题项目：
 
 | 项目 | 说明 |
 |---|---|
 | [aemeath-skin](https://github.com/1691695205/aemeath-skin) | DSH Web GUI 主题皮肤（星炬白昼 / 幽灵之夜），参考 dsh-client-ui-skin-denia 工程结构 |
-| [aemeath-pet](https://github.com/1691695205/aemeath-pet) | dsh-pet 桌宠资产包，Q 版像素图集源自 aemeath-mini-codex-pet |
 
-三者共用同一世界观设定：星炬学院 / 拉海洛 / 隧者之剑 / 声痕。
+共用同一世界观设定：星炬学院 / 拉海洛 / 隧者之剑 / 声痕。
 
-## 版权
+## 版权与许可
 
-「鸣潮」游戏作品及爱弥斯（Aemeath）角色形象版权归 Kuro Games（库洛游戏）所有；「星炬学院 / 拉海洛 / 隧者之剑 / 声痕」为相关设定。本项目为同人创作，与 Kuro Games 无关联。
+「鸣潮」游戏作品及爱弥斯（Aemeath）角色形象版权归 **Kuro Games（库洛游戏）**所有；「星炬学院 / 拉海洛 / 隧者之剑 / 声痕」为相关设定。
+
+本项目为**同人创作**，与 Kuro Games 无关联；仓库以 **CC BY-NC-SA 4.0**（署名-非商业性使用-相同方式共享）发布，署名链见 [NOTICE](NOTICE)，许可证全文见 [LICENSE](LICENSE)。
