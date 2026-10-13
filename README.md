@@ -17,8 +17,8 @@
 
 | 文件 | 说明 |
 |---|---|
-| `aemeath-persona.md` | **完整人设文本**（94 行）：人格设定 + 全部行为规则，可作为任何 agent 的 persona 注入源 |
-| `preset-persona-row.yml` | **DSH agent preset 专用配置行**：`@deepseek-ai/dsh-persona` 的 config 片段，可直接替换进 `agent.cordis.yml` 的 identity 段（路线 B，单个 agent 生效），自带完整安装注释 |
+| `aemeath-persona.md` | **完整人设文本**（95 行）：人格设定 + 全部行为规则，可作为任何 agent 的 persona 注入源 |
+| `preset-persona-row.yml` | **DSH agent preset 专用配置行**：`@deepseek-ai/dsh-persona` 的 config 片段（`prefix:` 字段），可直接放进任一 preset 声明的 plugins 列表，自带完整安装注释 |
 
 ### aemeath-persona.md 章节结构
 
@@ -35,20 +35,45 @@
 
 ## 安装
 
-### 路线 A：官方 standard preset 改造（推荐，preset 选择器可选）
+### 路线 A：bundle patch 声明（当前 dsh 唯一可行的路线）
 
-1. 复制官方 standard preset 到用户 preset 目录：
+dsh 0.2.0-rc.2（DSH Desktop 2.0.17）起，`$DSH_HOME/.agent-presets/<id>/` 发现根已被移除——preset 不再是 harness 扫描的目录，而是由 bundle patch 里的 `@deepseek-ai/dsh-agent-preset` 声明承载。旧目录式 preset 不会报错，只是**不再被读取**。
 
-   ```powershell
-   Copy-Item -Recurse <dsh安装目录>\apps\cli\config\agent-presets\standard `
-     C:\Users\<你的用户名>\.dsh\.agent-presets\aemeath
+1. 建一个 bundle 目录，`package.json` 里声明 patch：
+
+   ```jsonc
+   {
+     "name": "@dsh-external/dsh-character-presets",
+     "dsh": { "bundle": { "patch": ["./presets/aemeath.patch.yml"] } }
+   }
    ```
 
-2. 打开 `aemeath\agent.cordis.yml`，用 `preset-persona-row.yml` 里的 `- id: persona` 片段整体替换顶部 identity 段原有的 persona 行
-3. 可选调优（`preset-persona-row.yml` 尾部注释）：
-   - `complete: true` —— 人设成为唯一系统提示词
-   - `includeRuntimeContext: false` —— 不注入运行时上下文快照
-4. 新建会话，preset 选择器里选 `aemeath`
+2. patch 里写入声明，`plugins` 取当前安装版 `standard` preset 的插件清单，persona 行用 `preset-persona-row.yml` 的片段（`prefix:` 字段）：
+
+   ```yaml
+   - insert:
+       - id: preset-aemeath
+         name: '@deepseek-ai/dsh-agent-preset'
+         config:
+           id: aemeath
+           name: "爱弥斯模式"
+           order: 5
+           plugins:
+             - id: persona
+               name: '@deepseek-ai/dsh-persona'
+               config:
+                 prefix: |-
+                   （preset-persona-row.yml 的正文）
+   ```
+
+3. 在 profile 里 link 该 bundle 并 `pnpm install`，重启 DSH Desktop。
+4. 新建会话，preset 选择器里选 `aemeath`。
+
+可选调优（`preset-persona-row.yml` 尾部注释）：
+- `complete: true` —— 人设成为唯一系统提示词
+- `includeRuntimeContext: false` —— 不注入运行时上下文快照
+
+> 现成范例见仓库外的 `dsh-character-presets`，它同时声明 `aemeath` 与 `danya` 两个 preset。
 
 ### 路线 B：直接注入 persona 文本
 
