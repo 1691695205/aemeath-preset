@@ -77,7 +77,9 @@ dsh 0.2.0-rc.2（DSH Desktop 2.0.17）起，`$DSH_HOME/.agent-presets/<id>/` 发
 
 ### 路线 B：直接注入 persona 文本
 
-把 `aemeath-persona.md` 的内容作为 persona 文本注入任意支持 persona 的 agent 会话/预设（`{{model}}`、`{{cwd}}` 占位符按运行环境替换）。
+把 `aemeath-persona.md` 的内容作为 persona 文本注入任意支持 persona 的 agent 会话/预设（`{{model}}` 占位符按运行环境替换）。
+
+> ⚠️ 不要在人设里写 `{{cwd}}`：DSH 的 agent loop 只注册 `provider` / `model` 两个提示词变量，未注册的 `{{cwd}}` 会让系统提示词组装直接抛 `unknown prompt variable "{{cwd}}"`，本轮直接失败。工作目录由运行时上下文快照自带。
 
 ## 人设要点速览
 
