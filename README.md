@@ -19,6 +19,7 @@
 |---|---|
 | `aemeath-persona.md` | **完整人设文本**（95 行）：人格设定 + 全部行为规则，可作为任何 agent 的 persona 注入源 |
 | `preset-persona-row.yml` | **DSH agent preset 专用配置行**：`@deepseek-ai/dsh-persona` 的 config 片段（`prefix:` 字段），可直接放进任一 preset 声明的 plugins 列表，自带完整安装注释 |
+| `presets/aemeath.patch.yml` | **可直接用的 bundle patch**：自带完整 `@deepseek-ai/dsh-agent-preset` 声明，插件清单对齐 dsh 0.2.2-rc.1，persona 正文与 `preset-persona-row.yml` 逐字节一致 |
 
 ### aemeath-persona.md 章节结构
 
@@ -48,7 +49,7 @@ dsh 0.2.0-rc.2（DSH Desktop 2.0.17）起，`$DSH_HOME/.agent-presets/<id>/` 发
    }
    ```
 
-2. patch 里写入声明，`plugins` 取当前安装版 `standard` preset 的插件清单，persona 行用 `preset-persona-row.yml` 的片段（`prefix:` 字段）：
+2. 把本仓库的 `presets/aemeath.patch.yml` 放进 `presets/` 即可——它已经是完整声明（含 persona 正文），**不需要**再手工拼装。若你要基于自己的插件清单重写，则 `plugins` 取当前安装版 `standard` preset 的插件列表，persona 行用 `preset-persona-row.yml` 的片段（`prefix:` 字段）：
 
    ```yaml
    - insert:
@@ -65,6 +66,8 @@ dsh 0.2.0-rc.2（DSH Desktop 2.0.17）起，`$DSH_HOME/.agent-presets/<id>/` 发
                  prefix: |-
                    （preset-persona-row.yml 的正文）
    ```
+
+   > ⚠️ 插件清单**必须**对齐你所装 dsh 版本的 `standard` preset，不能照抄旧版本。dsh 0.2.2-rc.1 起 `@deepseek-ai/dsh-tool-subagent-control` 不再导出 `./list-agents` 子路径（`list_agents` 已并入主入口 `apply()` 统一注册），若沿用旧清单里的独立 `tool-subagent-list-agents` 行，该行会解析失败、fiber 从未创建，新建会话直接抛 `agent-preset/invalid: ... never started`。本仓库的 patch 已按 0.2.2-rc.1 校准。
 
 3. 在 profile 里 link 该 bundle 并 `pnpm install`，重启 DSH Desktop。
 4. 新建会话，preset 选择器里选 `aemeath`。
